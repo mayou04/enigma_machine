@@ -34,6 +34,17 @@ First, it takes in the input (three strings). Then, it enters them into `enigma_
 The plugboard is implemented with an array called `plugMap` that has 26 spaces, and every index has its index position (`plugMap[0]` = 0, `plugMap[1]` = 1). It is set up by splitting the input by commas, and depending on the plugs inputted, maps to a certain number that represents a number. Ex. when you input “AZ” into `setPlug()`, `plugMap[0]` = 25, `plugMap[25]` = 0, and when inputting the char, it will output the other number.
 
 ### Rotor
+
+Rotor # | ABCDEFGHIJKLMNOPQRSTUVWXYZ | Notch (When rotating from this letter, left rotor rotates too) |
+| :---: | ----- | :---: |
+| 1 | EKMFLGDQVZNTOWYHXUSPAIBRCJ | Q |
+| 2 | AJDKSIRUXBLHWTMCQGZNPYFVOE | E |
+| 3 | BDFHJLCPRTXVZNYEIWGAKMUSQO | V |
+| 4 | ESOVPZJAYQUIRHXLNFTGKDCMWB | J |
+| 5 | VZBRGITYUPSDNHLXAWMJQOFECK | Z |
+
+Note: 1: A to E, 2: A to A, 3: A to B, 4: A to E, 5: A to V
+
 This rotor actually takes a position and outputs another position, so depending on the rotation of the rotor, it gives a different result even if the same number is used. The rotor uses an array `rotorArr[3][3][x]` that stores the three rotors, two doubly ended queues, and an int. The original rotor settings are in `rotor[5][3]` which has two arrays and an int, the arrays are converted to doubly ended queues when transferred to `rotorArr[]`.
 The first array `Rotor[x][0]` stores the amount of spots that it travels (Ex. `rotor[1][0][0]` = 4, so if 0 is put in, it moves up 4 spots, and outputs 5, which means when A (0) is inputted, E (4) is output), this array helps with the initial rotor encryption. 
 The second array `rotorArr[x][1]` is the letter (number code) that the spot is mapped into, this helps locate how the letter was output (Ex. if when you input 5 you get 25, if you reverse it, you have 25 and entering it you get 5).
@@ -47,19 +58,7 @@ When first going through the rotors, the character is put into the rotor in a ce
 
 Going backwards, we will use the second doubly ended queue. What this does is take an int, x, and finds what index it is in `rotorArr[0][1][x]`, and turns it into that int. Basically finds where the number came from, and it is done with `rotorArr[1][1][x]` and `rotorArr[2][1][x]`.
 
-Rotor # | ABCDEFGHIJKLMNOPQRSTUVWXYZ | Notch (When rotating from this letter, left rotor rotates too) |
-| :---: | ----- | :---: |
-| 1 | EKMFLGDQVZNTOWYHXUSPAIBRCJ | Q |
-| 2 | AJDKSIRUXBLHWTMCQGZNPYFVOE | E |
-| 3 | BDFHJLCPRTXVZNYEIWGAKMUSQO | V |
-| 4 | ESOVPZJAYQUIRHXLNFTGKDCMWB | J |
-| 5 | VZBRGITYUPSDNHLXAWMJQOFECK | Z |
-
-Note: 1: A to E, 2: A to A, 3: A to B, 4: A to E, 5: A to V
-
 ### Reflector
-There are three available reflectors stored in `refArr()`. This machine is not invertible, so if you plug in Y and get X, if you plug in X you are not guaranteed to output Y. When setting the reflector, it returns the array of the reflector used (A-0,B-1,C-2) to `reflector[]`. This is just a substitution encryption, takes the result from the leftmost rotor, maps the int and outputs to the leftmost rotor.
-
 | Reflector | ABCDEFGHIJKLMNOPQRSTUVWXYZ |
 | :---: | ----- |
 | A | EJMZALYXVBWFCRQUONTSPIKHGD |
@@ -68,7 +67,11 @@ There are three available reflectors stored in `refArr()`. This machine is not i
 
 Note: If Ref. A: A goes to E, B: A to Y, C: A to F
 
-### Example:
+There are three available reflectors stored in `refArr()`. This machine is not invertible, so if you plug in Y and get X, if you plug in X you are not guaranteed to output Y. When setting the reflector, it returns the array of the reflector used (A-0,B-1,C-2) to `reflector[]`. This is just a substitution encryption, takes the result from the leftmost rotor, maps the int and outputs to the leftmost rotor.
+
+
+
+### Example
 
 | Input: | Output: | 
 | ----- | ----- | 
